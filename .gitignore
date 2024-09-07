@@ -1,0 +1,7 @@
+venv
+output*
+data
+*.pyc
+.mypy*
+.vscode
+__pycache__
