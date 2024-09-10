@@ -4,21 +4,21 @@ from model_building_blocks import FeedForward
 from model_building_blocks import EncoderLayer
 
 class BERT(torch.nn.Module):
-    def __init__(self, vocab_size, d_model=768, n_layers=12, heads=12, dropout=0.1):
+    def __init__(self, vocab_size, d_model=768, n_layers=12, heads=12, dropout=0.1, device=torch.device('cpu')):
         super().__init__()
         self.d_model = d_model
         self.n_layers = n_layers
         self.heads = heads
 
         feed_forward_hidden = d_model * 4
-        self.embedding = BERTEmbedding(vocab_size=vocab_size, embed_size=d_model)
+        self.embedding = BERTEmbedding(vocab_size=vocab_size, embed_size=d_model, device=device)
 
         self.encoder_blocks = torch.nn.ModuleList([
             EncoderLayer(d_model, heads, feed_forward_hidden, dropout) for _ in range(n_layers)
         ])
     
     def forward(self, x, segment_info):
-        mask = (x > 0).unsqueeze(1).repeat(1, x.size(), 1).unsqueeze(1)
+        mask = (x > 0).unsqueeze(1).repeat(1, x.size(1), 1).unsqueeze(1)
 
         x = self.embedding(x, segment_info)
         for encoder in self.encoder_blocks:

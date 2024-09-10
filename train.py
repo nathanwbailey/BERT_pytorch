@@ -1,6 +1,6 @@
 import torch
 from typing import Callable
-
+import tqdm
 
 def train_model(
     model: torch.nn.Module,
@@ -15,9 +15,15 @@ def train_model(
         avg_loss = 0.0
         total_correct = 0
         total_element = 0
-        for batch in trainloader:
+        data_iter = tqdm.tqdm(
+            enumerate(trainloader),
+            desc=f"Epoch {epoch}",
+            total=len(trainloader),
+            bar_format="{l_bar}{r_bar}"
+        )
+        for _, batch in data_iter:
             optimizer.zero_grad()
-            data = batch.to(device)
+            data = {key: value.to(device) for key, value in batch.items()}
             next_sent_output, mask_lm_output = model(data["bert_input"], data["segment_label"])
 
             next_loss = loss_function(next_sent_output, data["is_next"])

@@ -94,10 +94,11 @@ bert_model = BERT(
     d_model=768,
     n_layers=2,
     heads=12,
-    dropout=0.1
-)
+    dropout=0.1,
+    device=DEVICE
+).to(DEVICE)
 
-model = BERTLM(bert_model, len(bert_tokenizer.vocab))
+model = BERTLM(bert_model, len(bert_tokenizer.vocab)).to(DEVICE)
 
 
 optimizer = torch.optim.Adam(
