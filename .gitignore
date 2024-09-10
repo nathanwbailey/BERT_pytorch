@@ -1,7 +1,8 @@
 venv
 output*
-data
+datasets
 *.pyc
+data
 .mypy*
 .vscode
 __pycache__
