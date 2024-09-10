@@ -6,3 +6,4 @@ data
 .mypy*
 .vscode
 __pycache__
+bert-it-1
