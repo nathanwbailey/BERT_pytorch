@@ -76,7 +76,6 @@ class BERTDataset(torch.utils.data.Dataset):
                     token_id
                 )  # Label keeps the token for prediction
 
-            # Next Sentence Prediction
             else:
                 output.append(token_id)  # Append the tokens
                 for _ in range(len(token_id)):

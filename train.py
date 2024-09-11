@@ -11,7 +11,8 @@ def train_model(
     model: torch.nn.Module,
     num_epochs: int,
     optimizer: torch.optim.Optimizer, # type: ignore[name-defined]
-    loss_function: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+    loss_function_mlm: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+    loss_function_nsp: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
     trainloader: torch.utils.data.DataLoader, # type: ignore[type-arg]
     device: torch.device,
 ) -> None:
@@ -34,10 +35,10 @@ def train_model(
             next_sent_output, mask_lm_output = model(
                 data["bert_input"], data["segment_label"]
             )
-            # Negative log likelihood loss for both MLM and NSP
-            next_loss = loss_function(next_sent_output, data["is_next"])
 
-            mask_loss = loss_function(
+            next_loss = loss_function_nsp(next_sent_output, data["is_next"])
+
+            mask_loss = loss_function_mlm(
                 mask_lm_output.transpose(1, 2), data["bert_label"]
             )
             loss = next_loss + mask_loss

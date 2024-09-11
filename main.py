@@ -134,15 +134,18 @@ optimizer = torch.optim.Adam(
 )
 
 # Loss is negative log likelihood
-# 0 is Padding so ignore it
-loss = torch.nn.NLLLoss(ignore_index=0)
+# 0 is unchanged token so ignore it for the loss
+# We only want to focus on predictions of the changed tokens
+loss_mlm = torch.nn.NLLLoss(ignore_index=0)
+loss_nsp = torch.nn.BCEWithLogitsLoss()
 
 # Train the model
 train_model(
     model=MODEL,
     num_epochs=NUM_EPOCHS,
     optimizer=optimizer,
-    loss_function=loss,
+    loss_function_mlm=loss_mlm,
+    loss_function_nsp=loss_nsp,
     trainloader=trainloader,
     device=DEVICE,
 )
