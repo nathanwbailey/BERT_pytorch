@@ -13,6 +13,8 @@ from model import BERT, BERTLM
 from train import train_model
 
 MAXLEN = 64
+NUM_EPOCHS = 100
+BATCH_SIZE = 64
 
 # Paths to the datasets
 CORPUS_MOVIE_CONV = "./datasets/movie_conversations.txt"
@@ -109,13 +111,13 @@ bert_tokenizer = BertTokenizer.from_pretrained(
 train_data = BERTDataset(pairs, seq_len=MAXLEN, tokenizer=bert_tokenizer)
 
 trainloader = torch.utils.data.DataLoader(
-    train_data, batch_size=32, shuffle=True, pin_memory=True
+    train_data, batch_size=BATCH_SIZE, shuffle=True, pin_memory=True
 )
 
 BERT_MODEL = BERT(
     vocab_size=len(bert_tokenizer.vocab),
     d_model=768,
-    n_layers=2,
+    n_layers=4,
     heads=12,
     dropout=0.1,
     device=DEVICE,
@@ -138,7 +140,7 @@ loss = torch.nn.NLLLoss(ignore_index=0)
 # Train the model
 train_model(
     model=MODEL,
-    num_epochs=100,
+    num_epochs=NUM_EPOCHS,
     optimizer=optimizer,
     loss_function=loss,
     trainloader=trainloader,
