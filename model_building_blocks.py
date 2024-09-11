@@ -58,12 +58,12 @@ class EncoderLayer(torch.nn.Module):
         super().__init__()
         self.layernorm_1 = torch.nn.LayerNorm(d_model)
         self.layernorm_2 = torch.nn.LayerNorm(d_model)
-        self.multihead = torch.nn.MultiheadAttention(embed_dim=d_model, num_heads=heads)
+        self.multihead = torch.nn.MultiheadAttention(embed_dim=d_model, num_heads=heads, batch_first=True)
         self.feedforward = FeedForward(d_model, feed_forward_hidden)
         self.dropout = torch.nn.Dropout(dropout)
     
     def forward(self, embeddings, mask):
-        interacted = self.dropout(self.multihead(query=embeddings, key=embeddings, value=embeddings)[0])
+        interacted = self.dropout(self.multihead(query=embeddings, key=embeddings, value=embeddings, key_padding_mask=mask)[0])
         interacted = self.layernorm_1(interacted+embeddings)
         feed_forward_out = self.dropout(self.feedforward(interacted))
         encoded = self.layernorm_2(feed_forward_out + interacted)

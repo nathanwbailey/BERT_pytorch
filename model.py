@@ -18,8 +18,7 @@ class BERT(torch.nn.Module):
         ])
     
     def forward(self, x, segment_info):
-        mask = (x > 0).unsqueeze(1).repeat(1, x.size(1), 1).unsqueeze(1)
-
+        mask = (x > 0)
         x = self.embedding(x, segment_info)
         for encoder in self.encoder_blocks:
             x = encoder(x, mask)
