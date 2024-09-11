@@ -54,11 +54,12 @@ class NextSentencePrediction(torch.nn.Module):
         # Predict if the input sequence has 2 consecutive sentences
         super().__init__()
         self.linear = torch.nn.Linear(hidden, 2)
+        self.softmax = torch.nn.LogSoftmax(dim=-1)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward Pass."""
         # Only input the [CLS] token
-        return self.linear(x[:, 0])
+        return self.softmax(self.linear(x[:, 0]))
 
 
 class MaskedLanguageModel(torch.nn.Module):

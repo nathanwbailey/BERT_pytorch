@@ -137,7 +137,7 @@ optimizer = torch.optim.Adam(
 # 0 is unchanged token so ignore it for the loss
 # We only want to focus on predictions of the changed tokens
 loss_mlm = torch.nn.NLLLoss(ignore_index=0)
-loss_nsp = torch.nn.BCEWithLogitsLoss()
+loss_nsp = torch.nn.NLLLoss()
 
 # Train the model
 train_model(
