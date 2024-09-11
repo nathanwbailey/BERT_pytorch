@@ -1,6 +1,5 @@
 import torch
 from model_building_blocks import BERTEmbedding
-from model_building_blocks import FeedForward
 from model_building_blocks import EncoderLayer
 
 class BERT(torch.nn.Module):
@@ -18,7 +17,7 @@ class BERT(torch.nn.Module):
         ])
     
     def forward(self, x, segment_info):
-        mask = (x > 0)
+        mask = (x == 0)
         x = self.embedding(x, segment_info)
         for encoder in self.encoder_blocks:
             x = encoder(x, mask)
